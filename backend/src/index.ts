@@ -1,20 +1,14 @@
 import express from 'express';
-import path from 'path';
-import cors from 'cors';
 import { authenticate, authorize } from './middleware/auth';
 import { Role } from './types/roles';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(express.json());
 
-// API Routes
-const apiRouter = express.Router();
-
 // GET /profile — requires authentication only (any role)
-apiRouter.get('/profile', authenticate, (req, res) => {
+app.get('/profile', authenticate, (req, res) => {
   res.status(200).json({
     message: 'Profile retrieved successfully',
     user: req.user,
@@ -22,7 +16,7 @@ apiRouter.get('/profile', authenticate, (req, res) => {
 });
 
 // POST /content — requires ADMIN or EDITOR
-apiRouter.post(
+app.post(
   '/content',
   authenticate,
   authorize(Role.ADMIN, Role.EDITOR),
@@ -35,7 +29,7 @@ apiRouter.post(
 );
 
 // DELETE /system — requires ADMIN only
-apiRouter.delete(
+app.delete(
   '/system',
   authenticate,
   authorize(Role.ADMIN),
@@ -46,17 +40,6 @@ apiRouter.delete(
     });
   }
 );
-
-app.use('/api', apiRouter);
-
-// Serve Static Frontend files in production
-const frontendPath = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendPath));
-
-// Catch-all route to serve the frontend's index.html
-app.use((req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

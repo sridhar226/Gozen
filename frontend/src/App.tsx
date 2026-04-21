@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useDebounce } from './hooks/useDebounce';
 import { Button } from './components/Button';
-import { BackendTester } from './components/BackendTester';
 
 function App() {
   // Demo useLocalStorage
@@ -79,9 +78,7 @@ function App() {
         </div>
       </section>
 
-      <section style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9', marginTop: '2rem' }}>
-        <BackendTester />
-      </section>
+      {/* BackendTester removed for static GitHub Pages demo */}
     </div>
   );
 }
